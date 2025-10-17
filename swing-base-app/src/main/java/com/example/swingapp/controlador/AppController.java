@@ -16,19 +16,19 @@ public class AppController {
         this.outputPanel  = o;
 
         // Acciones de botones
-        controlPanel.btnCurl.addActionListener(this::onCurl);
+        controlPanel.btnSocket.addActionListener(this::onSocket);
         controlPanel.btnDate.addActionListener(this::onDate);
-        controlPanel.btnRun.addActionListener(this::onRun);
+        controlPanel.bntEstadistica.addActionListener(this::onEstadisticaRed);
+        controlPanel.btnPing.addActionListener(this::onPing);
+        controlPanel.btnCurl.addActionListener(this::onCurl);
         controlPanel.btnClear.addActionListener(this::onClear);
         controlPanel.btnExit.addActionListener(e -> System.exit(0));
     }
 
-
-    private void onCurl(ActionEvent e) {
-        String url = controlPanel.txtInput.getText().trim();
-        outputPanel.append("Ejecutando curl para: " + url);
+    private void onSocket(ActionEvent e) {
+        outputPanel.append("Ejecutando comando...");
         try {
-            ProcessBuilder pb = new ProcessBuilder("curl", url);
+            ProcessBuilder pb = new ProcessBuilder("ss", "-l");
             pb.redirectErrorStream(true);
             Process process = pb.start();
 
@@ -73,10 +73,60 @@ public class AppController {
         }
     }
 
-    private void onRun(ActionEvent e) {
+    private void onPing(ActionEvent e) {
+        String url = controlPanel.txtInput.getText().trim();
+        outputPanel.append("Ejecutando Ping para: " + url);
+        try {
+            ProcessBuilder pb = new ProcessBuilder("ping", url);
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+
+            new Thread(() -> {
+                try (var reader = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        outputPanel.append(line);
+                    }
+                } catch (Exception ex) {
+                    outputPanel.append("Error: " + ex.getMessage());
+                }
+            }).start();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error ejecutando proceso:\n" + ex.getMessage());
+        }
+    }
+
+    private void onCurl(ActionEvent e) {
+        String url = controlPanel.txtInput.getText().trim();
+        outputPanel.append("Ejecutando curl para: " + url);
+        try {
+            ProcessBuilder pb = new ProcessBuilder("curl", url);
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+
+            new Thread(() -> {
+                try (var reader = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        outputPanel.append(line);
+                    }
+                } catch (Exception ex) {
+                    outputPanel.append("Error: " + ex.getMessage());
+                }
+            }).start();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error ejecutando proceso:\n" + ex.getMessage());
+        }
+    }
+
+    private void onEstadisticaRed(ActionEvent e) {
         outputPanel.append("Ejecutando comando...");
         try {
-            ProcessBuilder pb = new ProcessBuilder("ping", "-c", "3", "8.8.8.8");
+            ProcessBuilder pb = new ProcessBuilder("ip", "-s", "link");
             pb.redirectErrorStream(true);
             Process process = pb.start();
 

@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class ControlPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-	public JButton btnRun, btnClear, btnExit, btnDate, btnCurl;
+	public JButton btnClear, btnExit, btnCurl, btnPing, bntEstadistica, btnDate, btnSocket;
     public JTextField txtInput;
 
     public ControlPanel() {
@@ -16,16 +16,20 @@ public class ControlPanel extends JPanel {
         txtInput = new JTextField();
         txtInput.setToolTipText("URL");
 
-        btnCurl = new JButton("Curl");
+        btnSocket = new JButton("Sockets");
         btnDate = new JButton("Date");
-        btnRun   = new JButton("▶ Ejecutar");
+        bntEstadistica = new JButton("EstadisticaRed");
+        btnPing = new JButton("Ping");
+        btnCurl = new JButton("Curl");
         btnClear = new JButton("🧹 Limpiar");
         btnExit  = new JButton("🚪 Salir");
 
-        add(btnCurl);
         add(txtInput);
+        add(btnSocket);
         add(btnDate);
-        add(btnRun);
+        add(bntEstadistica);
+        add(btnPing);
+        add(btnCurl);
         add(btnClear);
         add(btnExit);
     }
